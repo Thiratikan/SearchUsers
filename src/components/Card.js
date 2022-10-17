@@ -22,7 +22,19 @@ const Card = () => {
           <h4>{name}</h4>
           <p>@{twitter_username || "Thiratikan"}</p>
         </div>
+        <a href="html_url">follow</a>
       </header>
+      <p className="bio">{bio}</p>
+      <div className="links">
+        <MdBusiness></MdBusiness>
+      </div>
+      <div className="links">
+        <MdLocationOn></MdLocationOn> {location || "earth"}
+      </div>
+      <a href={`https://${blog}`}>
+        <MdLink></MdLink>
+        {blog}
+      </a>
     </Wrapper>
   );
 };
