@@ -15,7 +15,7 @@ const GithubProvider = ({ children }) => {
 
   //request loading
   const [requests, setRequests] = useState(0);
-  const [loading, setLoading] = useState(false);
+
   //error
   const [error, setError] = useState({ show: false, msg: "" });
 
@@ -26,6 +26,24 @@ const GithubProvider = ({ children }) => {
     );
     if (response) {
       searchGithubUser(response.data);
+      const { login, followers_url } = response.data;
+
+      //https://api.github.com/users/thiratikan/repos?per_page=100
+      //https://api.github.com/users/thiratikan/followers
+      await Promise.allSettled([
+        axios(`${rootUrl}/users/${login}/repos?per_page=100`),
+        axios(`${followers_url}?per_page=100`),
+      ]).then((results) => {
+        console.log(results);
+        const [repos, followers] = results;
+        const status = "fulfilled";
+        if (repos.status === status) {
+          setGitRepos(repos.value.data);
+        }
+        if (followers.status === status) {
+          setFollwers(followers.value.data);
+        }
+      });
     } else {
       toggleError(true, "there is no user with that username");
     }
